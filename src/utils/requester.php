@@ -38,8 +38,12 @@ class Requester {
 	}
 	
 	public function send_get() {
+		if(!check_url_availible()) {
+			Logger\DEFAULT_LOGGER->error("ERROR: url = {$this->url} is not available");
+			return;
+		}
         $data = ['method' => 'get'];
-        $response = $this->send( $data );
+        $response = $this->send($data);
         if ( isset( $response->response->message, $response->response->key ) ) {
             $this->message = $response->response->message;
             $this->key = $response->response->key;
@@ -49,6 +53,10 @@ class Requester {
     }
 	
 	public function send_update($message) {
+		if(!check_url_availible()) {
+			Logger\DEFAULT_LOGGER->error("ERROR: url = {$this->url} is not available");
+			return;
+		}
         $data = [
             'method' => 'update',
             'message' => $message
@@ -62,6 +70,10 @@ class Requester {
     }
 	
 	public function send_post($message) {
+		if(!check_url_availible()) {
+			Logger\DEFAULT_LOGGER->error("ERROR: url = {$this->url} is not available");
+			return;
+		}
 		curl_setopt($this->request, CURLOPT_POST, true);
         curl_setopt($this->request, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->request, CURLOPT_POSTFIELDS, $data);
