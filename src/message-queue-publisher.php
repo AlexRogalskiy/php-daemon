@@ -31,9 +31,9 @@ foreach($messages as $value) {
 }
 
 if(msg_send($queue,$msgtype_send, $message,$serialize_needed, $block_send,$err)) {
-   Logger\DEFAULT_LOGGER->debug('Message send');
+	DaemonLogger::getInstance()->debug('Message send');
 } else {
-   Logger\DEFAULT_LOGGER->error($err);
+	DaemonLogger::getInstance()->error($err);
 }
 
-Logger\DEFAULT_LOGGER->debug('send {count($messages)} messages');
+DaemonLogger::getInstance()->debug('send messages = ' . count($messages));

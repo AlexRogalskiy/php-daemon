@@ -8,16 +8,12 @@ class Coder {
 	
 	public static function encode($value, $key = '') {
         $output = self::xor_coding($value, $key);
-		//$nonce = \Sodium\randombytes_buf(\Sodium\CRYPTO_SECRETBOX_NONCEBYTES);
-		//\Sodium\crypto_stream_xor($value, $nonce, $eKey);
         return base64_encode($output);
     }
 	
     public static function decode($value, $key = '') {
         $output = base64_decode($value);
         return self::xor_coding($output, $key);
-		//$nonce = \Sodium\randombytes_buf(\Sodium\CRYPTO_SECRETBOX_NONCEBYTES);
-		//\Sodium\crypto_stream_xor($value, $nonce, $eKey);
     }
 	
 	private static function xor_coding($value, $key = '') {
@@ -29,4 +25,10 @@ class Coder {
         }
         return $output;
     }
+	
+	private static function xor_nonce_coding($value, $key = '') {
+		$nonce = \Sodium\randombytes_buf(\Sodium\CRYPTO_SECRETBOX_NONCEBYTES);
+		$output = \Sodium\crypto_stream_xor($value, $nonce, $key);
+		return $output;
+	}
 }

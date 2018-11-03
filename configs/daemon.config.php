@@ -16,3 +16,6 @@ const DEFAULT_MESSAGE_TYPE_RECEIVE = 1;
 const DEFAULT_MESSAGE_MAX_SIZE = 4096;
 
 const DEFAULT_DAEMON_LOCK = __DIR__ . '/../daemon.pid';
+
+const DEFAULT_URL = 'https://syn.su/testwork.php';
+const DEFAULT_MAIL = 'alexander.rogalsky@yandex.ru';

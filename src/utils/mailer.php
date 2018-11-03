@@ -27,11 +27,12 @@ class Mailer {
 	// default mail charset
 	private $mailCharset = null;
 	
-	public function __construct($mailTo) {
-        self::__construct('Daemon Service Message', 'Daemon Message', $mailTo);
+	public static function withDefault($mailTo) {
+		$instance = new self('Daemon Service Message', 'Daemon Message', $mailTo);
+		return $instance;
     }
 	
-	public function __construct($mailSubject, $mailMessage, $mailTo, $mailCc = null, $mailBcc = null $mailCharset = 'windows-1252') {
+	public function __construct($mailSubject, $mailMessage, $mailTo, $mailCc = null, $mailBcc = null, $mailCharset = 'windows-1252') {
         $this->mailSubject = $mailSubject;
         $this->mailMessage = $mailMessage;
         $this->mailTo = $mailTo;
@@ -40,7 +41,7 @@ class Mailer {
 		$this->mailCharset = $mailCharset;
     }
 
-	private function getHeaders() {
+	private function get_headers() {
 		$headers  = "Content-type: text/html; charset={$this->mailCharset}\r\n";
 		$headers .= "From: {$this->mailFromName} <{$this->mailFrom}>\r\n";
 		$headers .= "Reply-To: {$this->mailReplyTo}\r\n";
@@ -51,6 +52,30 @@ class Mailer {
 	}
 	
 	public function send() {
-		mail($this->mailTo, $this->mailSubject, $this->mailMessage, $this->getHeaders());
+		mail($this->mailTo, $this->mailSubject, $this->mailMessage, $this->get_headers());
+	}
+	
+	public function set_mail_subject($mailSubject) {
+		$this->mailSubject = mailSubject;
+	}
+	
+	public function set_mail_message($mailMessage) {
+		$this->mailMessage = mailMessage;
+	}
+	
+	public function set_mail_to($mailTo) {
+		$this->mailTo = mailMessage;
+	}
+	
+	public function set_mail_cc($mailCc) {
+		$this->mailCc = mailCc;
+	}
+	
+	public function set_mail_bcc($mailBcc) {
+		$this->mailBcc = mailBcc;
+	}
+	
+	public function set_mail_charset($mailCharset) {
+		$this->mailCharset = mailCharset;
 	}
 }

@@ -11,11 +11,11 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 
-define('DEFAULT_LOG_NAME', 'daemon.log');
-define('DEFAULT_ERROR_LOG', __DIR__ . '/../logs/error.log');
+define('DEFAULT_LOG_NAME', 'daemon-service');
+define('DEFAULT_ERROR_LOG', __DIR__ . '/../../logs/error.log');
 define('STD_INPUT_LOG', '/dev/null');
-define('STD_OUTPUT_LOG',  __DIR__ . '/../logs/daemon-out.log');
-define('STD_ERROR_LOG',  __DIR__ . '/../logs/daemon-err.log');
+define('STD_OUTPUT_LOG',  __DIR__ . '/../../logs/daemon-out.log');
+define('STD_ERROR_LOG',  __DIR__ . '/../../logs/daemon-err.log');
 
 ini_set('error_log', DEFAULT_ERROR_LOG);
 
@@ -54,11 +54,11 @@ class DaemonLogger {
     }
 	
 	public function debug($value) {
-		self::$logger->debug($value);
+		self::$logger->debug($value . PHP_EOL);
 	}
 	
 	public function error($value) {
-		self::$logger->error($value);
+		self::$logger->error($value . PHP_EOL);
 	}
  
     private function __clone() {
