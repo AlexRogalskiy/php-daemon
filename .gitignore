@@ -11,13 +11,14 @@ composer.phar
 *.swo
 *.swp
 *.vi
-*~
-tmp
-.idea
 *.daemon_lock
-pid
-logs
+*.pid
+
+*~
 .vagrant
+
+tmp
+logs
 
 ## IDE files / folders
 .DS_Store
@@ -25,6 +26,7 @@ logs
 .project
 .settings
 .tmproj
+.idea
 nbproject
 Thumbs.db
 
