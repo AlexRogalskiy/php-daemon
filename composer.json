@@ -1,0 +1,23 @@
+{
+    "name": "test/daemon",
+    "description": "PHP deamon showcase project",
+	"keywords": ["php", "daemon"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander Rogalsky",
+            "email": "alexander.rogalsky@yandex.ru"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+		"php":">=5.3.0",
+        "monolog/monolog": "^1.23",
+        "paragonie/halite": "^3.4",
+		"ext-pcntl": "*"
+	},
+	"autoload": {
+		"psr-0": {"Core": ""}
+	}
+}
