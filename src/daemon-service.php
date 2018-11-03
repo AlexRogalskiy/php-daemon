@@ -24,7 +24,7 @@ class DaemonService {
 	// default max number of child processes
     const DEFAULT_MAX_CHILD_PROCESS_NUMBER = 1;
 	// default delay
-    const DEFAULT_DELAY = 3600;
+    const DEFAULT_DELAY = 1000;
 	
     // flag to control the daemon process start / stop
     private $current_state = FALSE;
@@ -46,53 +46,54 @@ class DaemonService {
     }
 	
 	private function init() {
-		DaemonLogger::getInstance()->debug("Initializing daemon service with key = {$this->current_queue_key}");
+		DaemonLogger::getInstance()->debug("Initializing daemon service with key = {$this->current_queue_key}, pid = " . getmypid());
 		
-		if ($this->isDaemonActive(Configs\DEFAULT_DAEMON_LOCK)) {
-			DaemonLogger::getInstance()->debug('Daemon is already active');
+		if ($this->is_daemon_active(Configs\DEFAULT_DAEMON_LOCK)) {
+			DaemonLogger::getInstance()->debug('Daemon service with pid = ' . getmypid() . ' is already running');
 			exit();
 		}
 		
-        pcntl_signal(SIGTERM, array($this, "childProcessHandler"));
-        pcntl_signal(SIGCHLD, array($this, "childProcessHandler"));
-        pcntl_signal(SIGHUP, array($this, "childProcessHandler"));
-        pcntl_signal(SIGUSR1, array($this, "childProcessHandler"));
+        pcntl_signal(SIGTERM, array($this, "child_proc_handler"));
+        pcntl_signal(SIGCHLD, array($this, "child_proc_handler"));
+        pcntl_signal(SIGHUP, array($this, "child_proc_handler"));
+        pcntl_signal(SIGUSR1, array($this, "child_proc_handler"));
 	}
 
     public function run() {
-		DaemonLogger::getInstance()->debug('Running daemon service');
-		
+		DaemonLogger::getInstance()->debug('Running daemon service with pid = '. getmypid());
 		file_put_contents(Configs\DEFAULT_DAEMON_LOCK, getmypid());
 		
 		if($this->requester->send_get()) {
 			while (!$this->current_state) {
 				while(count($this->current_child_procs) > self::DEFAULT_MAX_CHILD_PROCESS_NUMBER) {
 					 DaemonLogger::getInstance()->debug('Maximum children processes exceeded ' . self::DEFAULT_MAX_CHILD_PROCESS_NUMBER.', waiting...');
-					 sleep(self::DEFAULT_DELAY);
+					 sleep(DEFAULT_DELAY);
 				}
-				$this->launchChildProcess();
+				$this->launch_child_proc();
+				sleep(Configs\DEFAULT_DAEMON_DELAY);
 			}
 		}
     }
 	
-	protected function launchChildProcess() { 
+	protected function launch_child_proc() {
         $pid = pcntl_fork();
         if ($pid == -1) {
             DaemonLogger::getInstance()->debug('Could not launch new child process, exiting');
             return FALSE;
         } else if ($pid) {
+			DaemonLogger::getInstance()->debug('Saving new child process with pid = ' . $pid);
             $this->current_child_procs[$pid] = TRUE;
         }  else {
             DaemonLogger::getInstance()->debug('Process with ID = ' . getmypid() . ' started');
 			
 			$message = Coder::encode($this->requester->get_response_message(), $this->requester->get_response_key());
 			if($this->requester->send_update($message) && $this->requester->is_response_success()) {
-				DaemonLogger::getInstance()->debug("SUCCESS: response = {$this->requester->get_response_message()}");
+				DaemonLogger::getInstance()->debug("SUCCESS: message = {$this->requester->get_response_message()}, key = {$this->requester->get_response_key()}");
 			} else {
-				$error = "ERROR: code = {$this->requester->get_response_code()}, message = {$this->requester->get_response_message()}";
+				$error = "ERROR: code = {$this->requester->get_error_code()}, message = {$this->requester->get_error_message()}";
 				DaemonLogger::getInstance()->debug($error);
 				$this->mailer->set_mail_message($error);
-				$this->mailer->send();
+				//$this->mailer->send();
 			}
 			
 			DaemonLogger::getInstance()->debug('Process with ID = ' . getmypid() . ' finished');
@@ -101,7 +102,7 @@ class DaemonService {
         return TRUE; 
     }
 	
-	public function isDaemonActive($pid_file) {
+	public function is_daemon_active($pid_file) {
 		if(is_file($pid_file)) {
 			$pid = file_get_contents($pid_file);
 			if(posix_kill($pid, 0)) {
@@ -116,7 +117,7 @@ class DaemonService {
 		return FALSE;
 	}
 	
-	public function childProcessHandler($signo, $pid = null, $status = null) {
+	public function child_proc_handler($signo, $pid = null, $status = null) {
         switch($signo) {
             case SIGTERM:
                 $this->current_state = TRUE;
@@ -146,7 +147,7 @@ class DaemonService {
 	}
 	
 	public function __destruct() {
-		DaemonLogger::getInstance()->debug("UnInitializing daemon service with key = {$this->current_queue_key}");
+		DaemonLogger::getInstance()->debug("Uninitializing daemon service with key = {$this->current_queue_key}, pid = " . getmypid());
 		unset($this->current_child_procs);
 	}
 }
