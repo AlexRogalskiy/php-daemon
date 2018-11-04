@@ -34,13 +34,19 @@ php src/index.php
 ps -aux | grep php
 ```
 
-6. Terminate daemon service:
+6. Check mail box:
+
+```
+cat /var/mail/vagrant
+```
+
+7. Terminate daemon service:
 
 ```
 kill -SIGTERM <pid>
 ```
 
-7. Check daemon logs:
+8. Check daemon logs:
 
 ```
 cd /logs
