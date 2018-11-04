@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail;
+namespace Utils\Mail;
 
 class Mailer {
 	
@@ -47,8 +47,8 @@ class Mailer {
 		$headers .= "Reply-To: {$this->mailReplyTo}\r\n";
 		if(isset($this->mailCc)) $headers .= "Cc: {$this->mailCc}\r\n";
 		if(isset($this->mailBcc)) $headers .= "Bcc: {$this->mailBcc}\r\n";
-		$headers .= "X-Mailer: Daemon/{phpversion()}";
-		return headers;
+		$headers .= "X-Mailer: Daemon/". phpversion();
+		return $headers;
 	}
 	
 	public function send() {
@@ -56,26 +56,26 @@ class Mailer {
 	}
 	
 	public function set_mail_subject($mailSubject) {
-		$this->mailSubject = mailSubject;
+		$this->mailSubject = $mailSubject;
 	}
 	
 	public function set_mail_message($mailMessage) {
-		$this->mailMessage = mailMessage;
+		$this->mailMessage = $mailMessage;
 	}
 	
 	public function set_mail_to($mailTo) {
-		$this->mailTo = mailMessage;
+		$this->mailTo = $mailTo;
 	}
 	
 	public function set_mail_cc($mailCc) {
-		$this->mailCc = mailCc;
+		$this->mailCc = $mailCc;
 	}
 	
 	public function set_mail_bcc($mailBcc) {
-		$this->mailBcc = mailBcc;
+		$this->mailBcc = $mailBcc;
 	}
 	
 	public function set_mail_charset($mailCharset) {
-		$this->mailCharset = mailCharset;
+		$this->mailCharset = $mailCharset;
 	}
 }

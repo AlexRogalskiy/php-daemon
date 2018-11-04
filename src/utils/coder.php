@@ -1,6 +1,6 @@
 <?php
 
-namespace Crypto;
+namespace Utils\Crypto;
 
 use ParagonIE\Halite\{Alerts as CryptoException, Config, Halite, Symmetric\Config as SymmetricConfig, Util as CryptoUtil};
 

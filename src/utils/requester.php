@@ -1,11 +1,11 @@
 <?php
 
-namespace HttpClient;
+namespace Utils\HttpClient;
 
 // logger
 require_once __DIR__ . '/logger.php';
 
-use Logger\DaemonLogger;
+use Utils\Logger\DaemonLogger;
 
 class Requester {
 	
@@ -25,12 +25,10 @@ class Requester {
 	const DEFAULT_CONNECTION_VERBOSE = true;
 	const DEFAULT_CONNECTION_RETURN_TRANSFER = true;
 	
-	// default list of browser
+	// default list of browsers
     const DEFAULT_BROWSER_LIST = ['Firefox', 'Safari', 'Opera', 'Flock', 'Internet Explorer', 'Seamonkey', 'Konqueror', 'GoogleBot'];
 	// default list of operating systems
 	const DEFAULT_OS_LIST = ['Windows 3.1', 'Windows 95', 'Windows 98', 'Windows 2000', 'Windows NT', 'Windows XP', 'Windows Vista', 'Redhat Linux', 'Ubuntu', 'Fedora', 'AmigaOS', 'OS 10.5'];
-	// default user agent
-	//const DEFAULT_USER_AGENT = 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)';
 	// default list of search engines
 	const DEFAULT_SEARCH_ENGINE_LIST = ['https://www.google.com/', 'https://www.google.co.uk/', 'http://www.daum.net/', 'http://www.eniro.se/', 'http://www.naver.com/', 'http://www.yahoo.com/', 'http://www.msn.com/', 'http://www.bing.com/', 'http://www.aol.com/', 'http://www.lycos.com/', 'http://www.ask.com/', 'http://www.altavista.com/', 'http://search.netscape.com/', 'http://www.cnn.com/SEARCH/', 'http://www.about.com/', 'http://www.mamma.com/', 'http://www.alltheweb.com/', 'http://www.voila.fr/', 'http://search.virgilio.it/', 'http://www.bing.com/', 'http://www.baidu.com/', 'http://www.alice.com/', 'http://www.yandex.com/', '  http://www.najdi.org.mk/', 'http://www.seznam.cz/', 'http://www.search.com/', 'http://www.wp.pl/', 'http://online.onetcenter.org/', 'http://www.szukacz.pl/', 'http://www.yam.com/', 'http://www.pchome.com/', 'http://www.kvasir.no/', 'http://sesam.no/', 'http://www.ozu.es/', 'http://www.terra.com/', 'http://www.mynet.com/', 'http://www.ekolay.net/', 'http://www.rambler.ru/'];
 	
@@ -246,6 +244,10 @@ class Requester {
             return $this->referer;
         }
         return self::DEFAULT_SEARCH_ENGINE_LIST[mt_rand(0, count(self::DEFAULT_SEARCH_ENGINE_LIST) - 1)];
+    }
+	
+	public function get_url() {
+        return $this->url;
     }
 	
 	public function get_response_message() {

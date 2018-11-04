@@ -5,7 +5,7 @@ namespace Utils;
 // logger
 require_once __DIR__ . '/logger.php';
 
-use Logger\DaemonLogger;
+use Utils\Logger\DaemonLogger;
 
 if(!function_exists('ftok') ) {
 	function ftok($file_name = '', $project_id = '') {
@@ -17,7 +17,7 @@ if(!function_exists('ftok') ) {
 	}
 }
 
-class Utils {
+class Common {
     public static function getFileId($input_file_name = '', $input_project_id = '') {
 		$key = ftok($input_file_name, $input_project_id);
 		if($key == -1) {
