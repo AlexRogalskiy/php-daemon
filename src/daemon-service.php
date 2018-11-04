@@ -89,6 +89,7 @@ class DaemonService {
 		// kill -s HUP
         pcntl_signal(SIGHUP, array($this, "sig_proc_handler"));
         pcntl_signal(SIGUSR1, array($this, "sig_proc_handler"));
+        pcntl_signal(SIGCLD, array($this, "sig_proc_handler"));
 		
 		// shutdown handler
 		register_shutdown_function(array($this, 'service_shutdown_handler'));
@@ -215,6 +216,7 @@ class DaemonService {
 				break;
 			case SIGUSR1:
 				break;
+			case SIGCLD:
             case SIGCHLD:
                 if (is_null($pid)) {
                     $pid = pcntl_waitpid(-1, $status, WNOHANG);
